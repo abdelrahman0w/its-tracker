@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Traffic Systems{% endblock title %}
+
+{% block div %}
+
+<script>
+    var active = document.getElementById("traffics");
+    active.classList.toggle("active");
+</script>
+
+<div class="row">
+    <div class="col-lg">
+        <h2 class="title-1 m-b-25">Traffic Systems</h2>
+        <div class="table-responsive table--no-card m-b-40">
+            <table class="table table-borderless table-striped table-earning">
+                <tbody>
+                    {% for traffic in traffics %}
+                        <tr>
+                            <td>{{traffic}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock div %}

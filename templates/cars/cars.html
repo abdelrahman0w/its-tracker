@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Registered Cars{% endblock title %}
+
+    {% block div %}
+    <div class="row">
+        <div class="col-lg">
+            <h2 class="title-1 m-b-25">Registered Cars</h2>
+            <div class="m-b-25">
+                <div class="m-b-10">
+                    <form class="form-header" action="" method="POST">
+                        <input class="col-lg au-input au-input--xl" type="text" name="search" placeholder="Search Cars..." />
+                        <button class="au-btn--submit" type="submit">
+                            <i class="zmdi zmdi-search"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="table-responsive table--no-card m-b-40">
+                <table class="table table-borderless table-striped table-earning">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Type</th>
+                            <th>Passengers</th>
+                            <th>Violations</th>
+                            <th>Owner</th>
+                            <th>Location</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for car in cars %}
+                            <tr>
+                                <td><a href="">{{car.car_id}}</a></td>
+                                <td><a href="">{{car.car_type}}</a></td>
+                                <td><a href="">{{car.num_passengers}}</a></td>
+                                <td><a href="">{{car.violations}}</a></td>
+                                <td><a href="">{{car.car_owner}}</a></td>
+                                <td><a href="">{{car.location}}</a></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock div %}

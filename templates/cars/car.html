@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}{{car}}{% endblock title %}
+
+{% block div %}
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="top-campaign">
+                <h3 class="title-3 m-b-30" style="text-align: center; border: 1px solid #000; padding: 25px;"><i class="zmdi zmdi-car"></i> Car Info</h3>
+                <div class="location text-sm-center" style="font-size: 35px;">
+                    <i class="zmdi zmdi-view-web"></i>
+                </div>
+                <h5 class="text-sm-center mt-2 mb-1">ID: {{car.car_id}}</h5>
+                <hr>
+                <div class="table-responsive">
+                    <table class="table table-top-campaign">
+                        <tbody>
+                            <tr>
+                                <td><i class="zmdi zmdi-block"></i> Violations:</td>
+                                <td>
+                                    {{car.violations}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><i class="zmdi zmdi-gps-dot"></i> Location:</td>
+                                <td>{{car.location}}</td>
+                            </tr>
+                            <tr>
+                                <td><i class="zmdi zmdi-account-circle"></i> Owner:</td>
+                                <td>{{car.car_owner}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock div %}

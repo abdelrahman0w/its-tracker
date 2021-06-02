@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}Violations{% endblock title %}
+
+{% block div %}
+
+<script>
+    var active = document.getElementById("viols");
+    active.classList.toggle("active");
+</script>
+
+<div class="row">
+    <div class="col-lg">
+        <h2 class="title-1 m-b-25">Violations</h2>
+        <div class="m-b-25">
+            <div class="m-b-10">
+                <form class="form-header" action="" method="POST">
+                    <input class="col-lg au-input au-input--xl" type="text" name="search" placeholder="Search Violations..." />
+                    <button class="au-btn--submit" type="submit">
+                        <i class="zmdi zmdi-search"></i>
+                    </button>
+                </form>
+            </div>
+
+            <div class="m-b-25 rs-select2--light rs-select2--sm rs-select2" style="float: right;">
+                <select id="date-filter" class="js-select2 au-select-light" name="time">
+                    <option selected="selected">All Time</option>
+                </select>
+                <div class="dropDownSelect2"></div>
+            </div>
+        </div>
+        <div class="table-responsive table--no-card m-b-40">
+            <table class="table table-borderless table-striped table-earning">
+                <thead>
+                    <tr>
+                        <th>time stamp</th>
+                        <th>car ID</th>
+                        <th>street</th>
+                        <th>Violation Type</th>
+                        <th>Comment(s)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for viol in viols %}
+                        <tr>
+                            <td>{{viol.time_stamp}}</td>
+                            <td>{{viol.car_id}}</td>
+                            <td>{{viol.street}}.</td>
+                            <td>{{viol.violation_type}}</td>
+                            <td>{{viol.comments}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock div %}
