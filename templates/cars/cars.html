@@ -17,10 +17,10 @@
                 </div>
             </div>
             <div class="table-responsive table--no-card m-b-40">
-                <table class="table table-borderless table-striped table-earning">
+                <table class="table table-borderless table-striped table-earning" id="stab">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th onclick="sortTable(0)" style="cursor: pointer;">ID</th>
                             <th>Type</th>
                             <th>Passengers</th>
                             <th>Violations</th>
@@ -31,16 +31,56 @@
                     <tbody>
                         {% for car in cars %}
                             <tr>
-                                <td><a href="">{{car.car_id}}</a></td>
-                                <td><a href="">{{car.car_type}}</a></td>
-                                <td><a href="">{{car.num_passengers}}</a></td>
-                                <td><a href="">{{car.violations}}</a></td>
-                                <td><a href="">{{car.car_owner}}</a></td>
-                                <td><a href="">{{car.location}}</a></td>
+                                <td>{{car.car_id}}</td>
+                                <td>{{car.car_type}}</td>
+                                <td>{{car.num_passengers}}</td>
+                                <td>{{car.Violation.count}}</td>
+                                <td>{{car.car_owner}}</td>
+                                <td>{{car.location}}</td>
                             </tr>
                         {% endfor %}
                     </tbody>
                 </table>
+                <script>
+                    function sortTable(n) {
+                        var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+                        table = document.getElementById("stab");
+                        switching = true;
+                        dir = "asc";
+                        while (switching) {
+                            switching = false;
+                            rows = table.rows;
+                            for (i = 1; i < (rows.length - 1); i++) {
+                            shouldSwitch = false;
+                            x = rows[i].getElementsByTagName("TD")[n];
+                            y = rows[i + 1].getElementsByTagName("TD")[n];
+                                if (dir == "asc") {
+                                    if (x.innerHTML > y.innerHTML) {
+                                        shouldSwitch= true;
+                                        break;
+                                    }
+                                }
+                                else if (dir == "desc") {
+                                    if (x.innerHTML < y.innerHTML) {
+                                        shouldSwitch = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            if (shouldSwitch) {
+                                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                                switching = true;
+                                switchcount ++;
+                            }
+                            else {
+                                if (switchcount == 0 && dir == "asc") {
+                                    dir = "desc";
+                                    switching = true;
+                                }
+                            }
+                        }
+                    }
+                </script>
             </div>
         </div>
     </div>

@@ -11,3 +11,7 @@ urlpatterns = [
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+admin.site.site_header = 'ITS Admin Panel'
+admin.site.site_title = 'Admin Panel'
+admin.site.index_title = 'Site Adminstration'

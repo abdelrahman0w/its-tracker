@@ -15,7 +15,7 @@ SECRET_KEY = 'django-insecure-!q8t(l)a(jrb^^9j7us9us*0=b6zc0w3qyw0^u@d9eq=8l^_@b
 DEBUG = True
 
 
-ALLOWED_HOSTS = ['its-tracker.herokuapp.com/', '127.0.0.1:8000', '0.0.0.0:5000']
+ALLOWED_HOSTS = ['its-tracker.herokuapp.com/', '127.0.0.1:8000', '0.0.0.0:5000', 'its.pythonanywhere.com']
 
 
 INSTALLED_APPS = [
@@ -50,7 +50,7 @@ ROOT_URLCONF = 'core.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['templates'],
+        'DIRS': ['templates', '/home/its/its-tracker/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -109,7 +109,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = '/home/its/its-tracker/staticfiles/'
 
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

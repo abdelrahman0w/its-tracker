@@ -10,7 +10,10 @@ from django.db.models.deletion import SET_NULL
 
 VIO_TYPE = (
     ('Speed', 'Speed'),
-    ('Traffic', 'Traffic'),
+    ('Emergency Vehicle', 'Emergency Vehicle'),
+    ('Tailgating', 'Tailgating'),
+    ('Red Light', 'Red Light'),
+    ('Carpool', 'Carpool'),
 )
 
 
@@ -20,13 +23,12 @@ class Car(models.Model):
         verbose_name = "Car"
         verbose_name_plural = "Cars"
 
-    car_id = models.CharField(verbose_name='Car ID', max_length=115, primary_key=True, unique=True)
-    car_type = models.CharField(verbose_name='Car Type', max_length=25)
+    car_id = models.CharField(verbose_name='Car ID', max_length=10000, primary_key=True, unique=True)
+    car_type = models.CharField(verbose_name='Car Type', max_length=255)
     num_passengers = models.IntegerField(verbose_name='Number of Passengers', default=4)
-    # violations = models.ManyToManyField(to='Violation', null=True, on_delete=models.SET_NULL, blank=True)
-    violations = models.ManyToManyField(to='Violation', null=True, blank=True)
-    car_owner = models.CharField(verbose_name='Car Owner', max_length=455)
-    location = models.CharField(verbose_name='Location', max_length=115)
+    # violations = models.ManyToManyField(to='Violation', null=True, blank=True)
+    car_owner = models.CharField(verbose_name='Car Owner', max_length=255)
+    location = models.CharField(verbose_name='Location', max_length=255)
 
     def __str__(self) -> str:
         return 'Car: ' + self.car_id
@@ -39,10 +41,13 @@ class Violation(models.Model):
         verbose_name_plural = "Violations"
 
     time_stamp = models.DateTimeField(auto_now=True)
-    car_id = models.CharField(max_length=25)
-    street = models.CharField(max_length=115)
-    violation_type = models.CharField(max_length=25, choices=VIO_TYPE)
-    comments = models.TextField(max_length=455, default='N/A')
+    car = models.ForeignKey(to='Car', null=True, on_delete=models.SET_NULL)
+    # car_id = models.CharField(max_length=255)
+    street = models.CharField(max_length=255, null=True, blank=True)
+    longitude = models.CharField(max_length=255)
+    latitude = models.CharField(max_length=255)
+    violation_type = models.CharField(max_length=255, choices=VIO_TYPE)
+    comments = models.TextField(max_length=555, default='N/A')
 
     def __str__(self) -> str:
         return 'Car: ' + self.car_id + ', ' + self.violation_type
@@ -55,6 +60,7 @@ class Traffic(models.Model):
         verbose_name_plural = "Traffic Systems"
 
     street = models.CharField(max_length=1000)
+    additional = models.TextField(max_length=500, null=True, blank=True)
 
     def __str__(self) -> str:
         return self.street + ' ST. Traffic System.'

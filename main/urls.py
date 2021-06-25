@@ -7,13 +7,13 @@ urlpatterns = [
 
     # path('cars', views.cars, name='cars'),
     path('cars/', views.cars, name='cars'),
-    
+
     # path('cars/<str:car_id>', views.carDetail),
     path('cars/<str:car_id>/', views.carDetail),
-    
+
     # path('car-register', views.carRegister, name='car-register'),
     path('car-register/', views.carRegister, name='car-register'),
-    
+
     # path('violations', views.violations, name='violations'),
     path('violations/', views.violations, name='violations'),
 
@@ -21,5 +21,5 @@ urlpatterns = [
     path('traffics/', views.traffics, name='traffics'),
 
     # path('dewDCW32feW3fsw-mdmD3mFa', views.newViolation, name='vio-form'),
-    path('dewDCW32feW3fsw-mdmD3mFa/', views.newViolation, name='vio-form'),
+    path('dewDCW32feW3fsw-mdmD3mFa/', views.newViolation.as_view(), name='vio-form'),
 ]
