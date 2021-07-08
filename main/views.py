@@ -1,11 +1,11 @@
 from django.shortcuts import render
+from django.db.models import Count
 from .models import *
 from django.contrib.auth.decorators import login_required
 from django.views import View
-from .form import requestForm
-from geopy.geocoders import Nominatim
-import json
-from django.http import JsonResponse
+from .form import requestForm, carForm
+from .filters import *
+import geocoder
 
 
 @login_required(login_url='/auth/login')
@@ -21,22 +21,35 @@ def index(request):
     return render(request=request, template_name='main/index.html', context=context)
 
 
-def search_car(request):
-    if request.method == 'POST':
-        search_term = json.loads(request.body).get('term', '')
-        search_res = Car.objects.filter(
-                        car_id=search_term, owner=request.user) | Car.objects.filter(
-                        car_type=search_term, owner=request.user) | Car.objects.filter(
-                        car_owner__icontains=search_term, owner=request.user) | Car.objects.filter(
-                        location__icontains=search_term, owner=request.user)
-        data = search_res.values()
-        return JsonResponse(list(data), safe=False)
+def count_viols(car):
+    return Violation.objects.filter(car=car).count()
+
+
+def getLocation(lat, lng):
+    key = 'AvDna5jFe4i0lOa_SFLUGDrPufWLGEvdLVrgC1P3TVdPGbU3vbSb9AfpCDaYg7DK'
+    location = geocoder.bing(
+                            [lat, lng],
+                            method='reverse',
+                            key=key)
+    country = location.country
+    state = location.state
+    city = location.city
+    street = location.street
+    postal = location.postal
+    ret = [str(street), str(state)]
+    return ", ".join(ret)
 
 
 @login_required(login_url='/auth/login')
 def cars(request):
     cars = Car.objects.all()
-    context = {'cars': cars}
+    viols = [count_viols(car) for car in cars]
+    all_recs = zip(cars, viols)
+    filters = CarFilter(request.GET, queryset=cars)
+    cars = filters.qs
+    viols = [count_viols(car) for car in cars]
+    all_recs = zip(cars, viols)
+    context = {'all_recs': all_recs, 'filters': filters}
     return render(request=request, template_name='cars/cars.html', context=context)
 
 
@@ -61,25 +74,14 @@ def traffics(request):
 @login_required(login_url='/auth/login')
 def violations(request):
     violations = Violation.objects.all()
-    context = {'viols': violations}
+    streets = [getLocation(violation.latitude, violation.longitude) for violation in violations]
+    all_recs = zip(violations, streets)
+    filters = ViolationFilter(request.GET, queryset=violations)
+    violations = filters.qs
+    streets = [getLocation(violation.latitude, violation.longitude) for violation in violations]
+    all_recs = zip(violations, streets)
+    context = {'all_recs': all_recs, 'filters': filters}
     return render(request=request, template_name='viols/violations.html', context=context)
-
-
-class Location:
-    def __init__(self, longitude, latitude):
-        self.longitude = longitude
-        self.latitude = latitude
-
-    def getLocation(self):
-        geolocator = Nominatim(user_agent="geoapiExercises")
-        location = geolocator.reverse(self.latitude+","+self.longitude)
-        address = location.raw['address']
-        city = address.get('city', '')
-        state = address.get('state', '')
-        country = address.get('country', '')
-        code = address.get('country_code')
-        zipcode = address.get('postcode')
-        return city
 
 
 class newViolation(View):
@@ -96,7 +98,7 @@ class newViolation(View):
             car = form.cleaned_data['car']
             longitude = form.cleaned_data['longitude']
             latitude = form.cleaned_data['latitude']
-            street = form.cleaned_data['street']
+            # street = form.cleaned_data['street']
             violation_type = form.cleaned_data['violation_type']
             comments = form.cleaned_data['comments']
         context = {
@@ -104,8 +106,96 @@ class newViolation(View):
             'car': car,
             'longitude': longitude,
             'latitude': latitude,
-            'street': street,
+            # 'street': street,
             'violation_type': violation_type,
             'comments': comments,
         }
         return render(request=request, template_name='viols/new-violation.html', context=context)
+
+
+# class newViolation(View):
+#     def get(self, request):
+#         form = requestForm()
+#         context = {'form': form}
+#         return render(request=request, template_name='viols/new-violation.html', context=context)
+
+#     def post(self, request):
+#         form = requestForm(request.POST)
+#         if form.is_valid():
+#             # form.save()
+#             car_id = form.cleaned_data['car_id']
+#             car_type = form.cleaned_data['car_type']
+#             num_passengers = form.cleaned_data['num_passengers']
+#             car_owner = form.cleaned_data['car_owner']
+#             plate_num = form.cleaned_data['plate_num']
+#             if Car.objects.filter(car_id=car_id) in Car.objects.all():
+#                 car = Car.objects.filter(car_id=car_id)
+#                 longitude = form.cleaned_data['longitude']
+#                 latitude = form.cleaned_data['latitude']
+#                 violation_type = form.cleaned_data['violation_type']
+#                 comments = form.cleaned_data['comments']
+#                 form.save()
+#             else:
+#                 client = requests.session()
+#                 client.get('https://its.pythonanywhere.com/vnekr-mfckeln1234nfiw/')
+#                 if 'csrftoken' in client.cookies:
+#                     csrftoken = client.cookies['csrftoken']
+#                 else:
+#                     csrftoken = client.cookies['csrf']
+#                 data = dict(
+#                     car_id=car_id,
+#                     car_type=car_type,
+#                     num_passengers=num_passengers,
+#                     car_owner=car_owner,
+#                     plate_num=plate_num,
+#                     csrfmiddlewaretoken=csrftoken,
+#                     next='/')
+#                 client.post(
+#                     url,
+#                     data=data,
+#                     headers=dict(Referer=url))
+#                 car = Car.objects.filter(car_id=car_id)
+#                 longitude = form.cleaned_data['longitude']
+#                 latitude = form.cleaned_data['latitude']
+#                 violation_type = form.cleaned_data['violation_type']
+#                 comments = form.cleaned_data['comments']
+#                 form.save()
+#         context = {
+#             'form': form,
+#             'car_id': car_id,
+#             'car_type': car_type,
+#             'num_passengers': num_passengers,
+#             'car_owner': car_owner,
+#             'plate_num': plate_num,
+#             'longitude': longitude,
+#             'latitude': latitude,
+#             'violation_type': violation_type,
+#             'comments': comments,
+#         }
+#         return render(request=request, template_name='viols/new-violation.html', context=context)
+
+
+class newCar(View):
+    def get(self, request):
+        form = carForm()
+        context = {'form': form}
+        return render(request=request, template_name='cars/car-register.html', context=context)
+
+    def post(self, request):
+        form = carForm(request.POST)
+        if form.is_valid():
+            form.save()
+            car_id = form.cleaned_data['car_id']
+            car_type = form.cleaned_data['car_type']
+            num_passengers = form.cleaned_data['num_passengers']
+            car_owner = form.cleaned_data['car_owner']
+            plate_num = form.cleaned_data['plate_num']
+        context = {
+            'form': form,
+            'car_id': car_id,
+            'car_type': car_type,
+            'num_passengers': num_passengers,
+            'car_owner': car_owner,
+            'plate_num': plate_num,
+        }
+        return render(request=request, template_name='cars/car-register.html', context=context)

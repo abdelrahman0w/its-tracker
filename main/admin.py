@@ -10,6 +10,13 @@ class CarAdmin(admin.ModelAdmin):
         return self.readonly_fields
 
 
+class ViolationAdmin(admin.ModelAdmin):
+    def get_readonly_fields(self, request, obj=None):
+        if obj:
+            return self.readonly_fields + ('car',)
+        return self.readonly_fields
+
+
 class TrafficAdmin(admin.ModelAdmin):
     def get_readonly_fields(self, request, obj=None):
         if obj:
@@ -18,5 +25,5 @@ class TrafficAdmin(admin.ModelAdmin):
 
 admin.site.register(Car, CarAdmin)
 # admin.site.register(Car)
-admin.site.register(Violation)
+admin.site.register(Violation, ViolationAdmin)
 admin.site.register(Traffic, TrafficAdmin)

@@ -1,5 +1,6 @@
 from django.urls import path, include
 from . import views
+from django.views.decorators.csrf import csrf_exempt
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -22,4 +23,7 @@ urlpatterns = [
 
     # path('dewDCW32feW3fsw-mdmD3mFa', views.newViolation, name='vio-form'),
     path('dewDCW32feW3fsw-mdmD3mFa/', views.newViolation.as_view(), name='vio-form'),
+
+    # path('vnekr-mfckeln1234nfiw', views.newCar.as_view(), name='car-form'),
+    path('vnekr-mfckeln1234nfiw/', views.newCar.as_view(), name='car-form'),
 ]

@@ -3,6 +3,8 @@
 
 {% load static %}
 
+{%load crispy_forms_tags %}
+
 <head>
     <!-- Required meta tags-->
     <meta charset="UTF-8">
@@ -69,8 +71,10 @@
                                 <!--    <label><i class="zmdi zmdi-comment-outline"></i> Comment</label>-->
                                 <!--    <textarea class="au-input au-input--full" name="comment" placeholder="Comment"></textarea>-->
                                 <!--</div>-->
-                                {{ form.as_p }}
-                                <button class="au-btn au-btn--block au-btn--green m-b-20" type="submit"><i class="zmdi zmdi-check-circle"></i> record</button>
+                                {{ form|crispy }}
+                                <div style="text-align: center;">
+                                    <button class="au-btn au-btn--block au-btn--green m-b-20" type="submit"><i class="zmdi zmdi-check-circle"></i> record</button>
+                                </div>
                             </form>
                         </div>
                     </div>

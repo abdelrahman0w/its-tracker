@@ -1,49 +1,52 @@
-// const searchField = document.querySelector("#searchField");
-// const tableOutput = document.querySelector(".table-output");
-// const appTable = document.querySelector(".app-table");
-// tableOutput.style.display = "none";
-// const tbody = document.querySelector(".table-body");
+const searchField = document.querySelector("#searchField");
+const tableOutput = document.querySelector(".table-output");
+const appTable = document.querySelector(".app-table");
+tableOutput.style.visibility = "hidden";
+const noResults = document.querySelector(".no-results");
+const tbody = document.querySelector(".table-body");
 
-// searchField.addEventListener("keyup", (e) => {
-//     const searchValue = e.target.value;
+searchField.addEventListener("keyup", (e) => {
+    const searchValue = e.target.value;
 
-//     if (searchValue.trim().length > 0) {
-//         tbody.innerHTML = "";
-//         fetch("/cars/car-search", {
-//                 body: JSON.stringify({
-//                     term: searchValue
-//                 }),
-//                 method: "POST",
-//             })
-//             .then((res) => res.json())
-//             .then((data) => {
-//                 console.log("data", data);
-//                 appTable.style.display = "none";
-//                 tableOutput.style.display = "block";
+    if (searchValue.trim().length > 0) {
+        tbody.innerHTML = "";
+        fetch("/car-search", {
+                body: JSON.stringify({
+                    term: searchValue
+                }),
+                method: "POST",
+            })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log("data", data);
+                appTable.style.visibility = "hidden";
+                tableOutput.style.visibility = "visible";
 
-//                 console.log("data.length", data.length);
+                console.log("data.length", data.length);
 
-//                 if (data.length === 0) {
-//                     tableOutput.style.display = "none";
-//                 } else {
-//                     data.forEach((item) => {
-//                         tbody.innerHTML += `
-//                             <tr>
-//                             <td>${car.car_id}</td>
-//                             <td>${car.car_type}</td>
-//                             <td>${car.num_passengers}</td>
-//                             <td>${car.Violation.count}</td>
-//                             <td>${car.car_owner}</td>
-//                             <td>${car.location}</td>
-//                             </tr>`;
-//                     });
-//                 }
-//             });
-//     } else {
-//         tableOutput.style.display = "none";
-//         appTable.style.display = "block";
-//     }
-// });
+                if (data.length === 0) {
+                    noResults.style.visibility = "visible";
+                    tableOutput.style.visibility = "hidden";
+                } else {
+                    noResults.style.visibility = "hidden";
+                    data.forEach((item) => {
+                        tbody.innerHTML += `
+                            <tr>
+                            <td>${car.car_id}</td>
+                            <td>${car.car_type}</td>
+                            <td>${car.num_passengers}</td>
+                            <td>${car.Violation.count}</td>
+                            <td>${car.car_owner}</td>
+                            <td>${car.location}</td>
+                            </tr>`;
+                    });
+                }
+            });
+    } else {
+        tableOutput.style.visibility = "hidden";
+        appTable.style.visibility = "visible";
+    }
+});
 
 
 (function($) {
@@ -153,7 +156,7 @@
     // USE STRICT
     "use strict";
 
-    // Dropdown
+    // Dropdown 
     try {
         var menu = $('.js-item-menu');
         var sub_menu_is_showed = -1;

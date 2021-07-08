@@ -28,8 +28,15 @@ INSTALLED_APPS = [
 
     # Added
     'main',
-    'authentication'
+    'authentication',
+
+    # Additional
+    'django_filters',
+    'crispy_forms',
 ]
+
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 
 MIDDLEWARE = [
@@ -94,7 +101,7 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'en-us'
 
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Africa/Cairo'
 
 
 USE_I18N = True

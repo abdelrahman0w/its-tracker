@@ -1,21 +1,76 @@
 {% extends 'base.html' %}
 
+{%load crispy_forms_tags %}
+
 {% block title %}Registered Cars{% endblock title %}
 
     {% block div %}
-    <div class="row">
-        <div class="col-lg">
-            <h2 class="title-1 m-b-25">Registered Cars</h2>
-            <div class="m-b-25">
-                <div class="m-b-10">
-                    <form class="form-header" action="" method="POST">
-                        <input class="col-lg au-input au-input--xl" type="text" name="search" placeholder="Search Cars..." />
-                        <button class="au-btn--submit" type="submit">
-                            <i class="zmdi zmdi-search"></i>
-                        </button>
+
+    <script>
+        var active = document.getElementById("cars");
+        active.classList.toggle("active");
+    </script>
+
+<div class="row">
+    <div class="col-lg">
+        <h2 class="title-1 m-b-25">Registered Cars</h2>
+        <div class="card" id="accordion">
+            <button data-toggle="collapse" data-target="#filter-form" aria-expanded="true" aria-controls="filter-form">
+                <div class="card-header" id="filter">
+                    <i class="zmdi zmdi-filter-list"></i>
+                    Filter Records
+                </div>
+            </button>
+            <div id="filter-form" class="collapse" aria-labelledby="filter" data-parent="#accordion">
+                <div class="card-body card-block">
+                    {% csrf_token %}
+                    <form method="get" class="form">
+                        {{filters.form|crispy}}
+                        <!--<div class="form-group">-->
+                        <!--    <label for="keyword" class="pr-1 form-control-label">Keyword</label>-->
+                        <!--    <input id="keyword" type="text" placeholder="Enter Keyword..." class="form-control">-->
+                        <!--</div>-->
+                        <!--<div class="form-group">-->
+                        <!--    <label for="select" class="pr-1 form-control-label">Type</label>-->
+                        <!--    <select name="select" id="select" class="form-control">-->
+                        <!--        <option selected="selected">All Types</option>-->
+                        <!--        <option>Speed</option>-->
+                        <!--        <option>Emergency Vehicle</option>-->
+                        <!--        <option>Tailgating</option>-->
+                        <!--        <option>Red Light</option>-->
+                        <!--        <option>Carpool</option>-->
+                        <!--    </select>-->
+                        <!--</div>-->
+                        <!--<div class="form-group">-->
+                        <!--    <label for="range" class="form-control-label">Date Range</label>-->
+                        <!--    <div id="range" class="input-group">-->
+                        <!--        <input id="from" type="date" class="form-control">-->
+                        <!--        <div class="input-group-addon">to</div>-->
+                        <!--        <input id="to" type="date" class="form-control">-->
+                        <!--    </div>-->
+                        <!--</div>-->
+                        <div style="text-align: center;">
+                            <button type="submit" class="btn btn-primary btn-sm">
+                                <i class="fa fa-dot-circle-o"></i> Apply Filters
+                            </button>
+                        </div>
                     </form>
                 </div>
-            </div>
+                <!--<div class="card-footer" style="text-align: center;">-->
+                <!--    <button type="submit" class="btn btn-primary btn-sm">-->
+                <!--        <i class="fa fa-dot-circle-o"></i> Apply Filters-->
+                <!--    </button>-->
+                <!--    <button onclick="location.href='{% url 'violations' %}';" class="btn btn-danger btn-sm">-->
+                <!--        <i class="fa fa-ban"></i> Reset-->
+                <!--    </button>-->
+                <!--</div>-->
+            <div>
+        </div>
+    </div>
+</div>
+
+    <div class="row">
+        <div class="col-lg">
             <div class="table-responsive table--no-card m-b-40">
                 <table class="table table-borderless table-striped table-earning" id="stab">
                     <thead>
@@ -25,22 +80,23 @@
                             <th>Passengers</th>
                             <th>Violations</th>
                             <th>Owner</th>
-                            <th>Location</th>
+                            <th>Plate Number</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for car in cars %}
+                        {% for car, viol in all_recs %}
                             <tr>
                                 <td>{{car.car_id}}</td>
                                 <td>{{car.car_type}}</td>
                                 <td>{{car.num_passengers}}</td>
-                                <td>{{car.Violation.count}}</td>
+                                <td>{{viol}}</td>
                                 <td>{{car.car_owner}}</td>
-                                <td>{{car.location}}</td>
+                                <td>{{car.plate_num}}</td>
                             </tr>
                         {% endfor %}
                     </tbody>
                 </table>
+
                 <script>
                     function sortTable(n) {
                         var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;

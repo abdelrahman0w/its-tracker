@@ -131,7 +131,7 @@
                         <!--        <i class="fas fa-plus-square"></i>Register a Car-->
                         <!--    </a>-->
                         <!--</li>-->
-                        <li class="" id="reg">
+                        <li class="">
                             <a class="js-arrow" href="{% url 'admin:index' %}">
                                 <i class="zmdi zmdi-settings"></i>Admin Panel
                             </a>
@@ -153,10 +153,11 @@
                                 <div class="account-wrap">
                                     <form action="{% url 'logout' %}" method="post">
                                         {% csrf_token %}
-                                        <p>
-                                            {{user.username}} -
-                                            <input type="submit" value="Log out!" style="cursor: pointer; color: #4272d7;">
-                                        </p>
+                                        <button type="submit" class="btn btn-danger">{{user.username}} - Log out!</button>
+                                        <!--<p>-->
+                                        <!--    {{user.username}} --->
+                                        <!--    <input type="submit" value="Log out!" style="cursor: pointer; color: #4272d7;">-->
+                                        <!--</p>-->
                                     </form>
                                 </div>
                             </div>
