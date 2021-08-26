@@ -9,7 +9,7 @@
 
 ## Description
 
-ITS Tracker is a web-based dashboard and admin panel used to monitor everything in Intelligent Traffic System.
+ITS Tracker is a web-based dashboard and admin panel created with Django. It's used to monitor and control an Intelligent Traffic System.
 
 ## Installation
 
