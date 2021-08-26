@@ -11,6 +11,11 @@
 
 ITS Tracker is a web-based dashboard and admin panel created with Django. It's used to monitor and control an Intelligent Traffic System.
 
+To try a demo, go to: [its.pythonanywhere.com](https://its.pythonanywhere.com/). and use the following credentials:
+
+- username: demo
+- password: De.mo.123
+
 ## Installation
 
 ### Installation Requirements
