@@ -18,42 +18,34 @@ VIO_TYPE = (
 )
 
 
-# class requestForm(forms.ModelForm):
-#     class Meta:
-#         model = Violation
-#         # fields = ('car','violation_type','longitude','latitude','comments','street',)
-#         fields = ('car_id','car_type','num_passengers','car_owner','plate_num','violation_type','longitude','latitude','comments',)
-
-#     car_id = forms.CharField()
-#     car_type = forms.CharField()
-#     num_passengers = forms.CharField()
-#     car_owner = forms.CharField()
-#     plate_num = forms.CharField()
-#     violation_type = forms.CharField(widget=forms.Select(choices=VIO_TYPE))
-#     longitude = forms.CharField()
-#     latitude = forms.CharField()
-#     comments = forms.CharField(widget=forms.Textarea)
-
-
 class requestForm(forms.ModelForm):
     class Meta:
         model = Violation
-        # fields = ('car','violation_type','longitude','latitude','comments','street',)
-        fields = ('car','violation_type','longitude','latitude','comments',)
+        fields = (
+            'car',
+            'violation_type',
+            'longitude',
+            'latitude',
+            'comments',
+            )
 
     car = forms.ModelChoiceField(queryset=Car.objects.all())
-    # violation_type = forms.CharField()
     violation_type = forms.CharField(widget=forms.Select(choices=VIO_TYPE))
     longitude = forms.CharField()
     latitude = forms.CharField()
-    # street = forms.CharField(required=False)
     comments = forms.CharField(widget=forms.Textarea)
 
 
 class carForm(forms.ModelForm):
     class Meta:
         model = Car
-        fields = ('car_id','car_type','num_passengers','car_owner','plate_num',)
+        fields = (
+            'car_id',
+            'car_type',
+            'num_passengers',
+            'car_owner',
+            'plate_num',
+            )
 
     car_id = forms.CharField()
     car_type = forms.CharField(widget=forms.Select(choices=CAR_TYPE))

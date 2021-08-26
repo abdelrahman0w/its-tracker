@@ -18,7 +18,11 @@ def index(request):
         'viols': violations,
         'traffics': traffics,
     }
-    return render(request=request, template_name='main/index.html', context=context)
+    return render(
+        request=request,
+        template_name='main/index.html',
+        context=context
+        )
 
 
 def count_viols(car):
@@ -31,12 +35,14 @@ def getLocation(lat, lng):
                             [lat, lng],
                             method='reverse',
                             key=key)
+
     country = location.country
     state = location.state
     city = location.city
     street = location.street
     postal = location.postal
     ret = [str(street), str(state)]
+
     return ", ".join(ret)
 
 
@@ -49,26 +55,51 @@ def cars(request):
     cars = filters.qs
     viols = [count_viols(car) for car in cars]
     all_recs = zip(cars, viols)
-    context = {'all_recs': all_recs, 'filters': filters}
-    return render(request=request, template_name='cars/cars.html', context=context)
+    context = {
+        'all_recs': all_recs,
+        'filters': filters,
+        }
+
+    return render(
+        request=request,
+        template_name='cars/cars.html',
+        context=context
+        )
 
 
 @login_required(login_url='/auth/login')
 def carDetail(request, car_id):
     carDetail = Car.objects.get(car_id=car_id)
-    context = {'car': carDetail}
-    return render(request=request, template_name='cars/car.html', context=context)
+    context = {
+        'car': carDetail,
+        }
+
+    return render(
+        request=request,
+        template_name='cars/car.html',
+        context=context
+        )
 
 
 @login_required(login_url='/auth/login')
 def carRegister(request):
-    return render(request=request, template_name='cars/car-register.html')
+    return render(
+        request=request,
+        template_name='cars/car-register.html'
+        )
 
 @login_required(login_url='/auth/login')
 def traffics(request):
     traffics = Traffic.objects.all()
-    context = {'traffics': traffics}
-    return render(request=request, template_name='traffics/traffics.html', context=context)
+    context = {
+        'traffics': traffics,
+        }
+
+    return render(
+        request=request,
+        template_name='traffics/traffics.html',
+        context=context
+        )
 
 
 @login_required(login_url='/auth/login')
@@ -80,25 +111,37 @@ def violations(request):
     violations = filters.qs
     streets = [getLocation(violation.latitude, violation.longitude) for violation in violations]
     all_recs = zip(violations, streets)
-    context = {'all_recs': all_recs, 'filters': filters}
-    return render(request=request, template_name='viols/violations.html', context=context)
+    context = {
+        'all_recs': all_recs,
+        'filters': filters
+        }
+
+    return render(
+        request=request,
+        template_name='viols/violations.html',
+        context=context
+        )
 
 
 class newViolation(View):
     def get(self, request):
         form = requestForm()
-        context = {'form': form}
-        return render(request=request, template_name='viols/new-violation.html', context=context)
+        context = {
+            'form': form,
+            }
+        return render(
+            request=request,
+            template_name='viols/new-violation.html',
+            context=context
+            )
 
     def post(self, request):
         form = requestForm(request.POST)
         if form.is_valid():
             form.save()
-            # car = form.cleaned_data['car']
             car = form.cleaned_data['car']
             longitude = form.cleaned_data['longitude']
             latitude = form.cleaned_data['latitude']
-            # street = form.cleaned_data['street']
             violation_type = form.cleaned_data['violation_type']
             comments = form.cleaned_data['comments']
         context = {
@@ -106,80 +149,29 @@ class newViolation(View):
             'car': car,
             'longitude': longitude,
             'latitude': latitude,
-            # 'street': street,
             'violation_type': violation_type,
             'comments': comments,
         }
-        return render(request=request, template_name='viols/new-violation.html', context=context)
 
-
-# class newViolation(View):
-#     def get(self, request):
-#         form = requestForm()
-#         context = {'form': form}
-#         return render(request=request, template_name='viols/new-violation.html', context=context)
-
-#     def post(self, request):
-#         form = requestForm(request.POST)
-#         if form.is_valid():
-#             # form.save()
-#             car_id = form.cleaned_data['car_id']
-#             car_type = form.cleaned_data['car_type']
-#             num_passengers = form.cleaned_data['num_passengers']
-#             car_owner = form.cleaned_data['car_owner']
-#             plate_num = form.cleaned_data['plate_num']
-#             if Car.objects.filter(car_id=car_id) in Car.objects.all():
-#                 car = Car.objects.filter(car_id=car_id)
-#                 longitude = form.cleaned_data['longitude']
-#                 latitude = form.cleaned_data['latitude']
-#                 violation_type = form.cleaned_data['violation_type']
-#                 comments = form.cleaned_data['comments']
-#                 form.save()
-#             else:
-#                 client = requests.session()
-#                 client.get('https://its.pythonanywhere.com/vnekr-mfckeln1234nfiw/')
-#                 if 'csrftoken' in client.cookies:
-#                     csrftoken = client.cookies['csrftoken']
-#                 else:
-#                     csrftoken = client.cookies['csrf']
-#                 data = dict(
-#                     car_id=car_id,
-#                     car_type=car_type,
-#                     num_passengers=num_passengers,
-#                     car_owner=car_owner,
-#                     plate_num=plate_num,
-#                     csrfmiddlewaretoken=csrftoken,
-#                     next='/')
-#                 client.post(
-#                     url,
-#                     data=data,
-#                     headers=dict(Referer=url))
-#                 car = Car.objects.filter(car_id=car_id)
-#                 longitude = form.cleaned_data['longitude']
-#                 latitude = form.cleaned_data['latitude']
-#                 violation_type = form.cleaned_data['violation_type']
-#                 comments = form.cleaned_data['comments']
-#                 form.save()
-#         context = {
-#             'form': form,
-#             'car_id': car_id,
-#             'car_type': car_type,
-#             'num_passengers': num_passengers,
-#             'car_owner': car_owner,
-#             'plate_num': plate_num,
-#             'longitude': longitude,
-#             'latitude': latitude,
-#             'violation_type': violation_type,
-#             'comments': comments,
-#         }
-#         return render(request=request, template_name='viols/new-violation.html', context=context)
+        return render(
+            request=request,
+            template_name='viols/new-violation.html',
+            context=context
+            )
 
 
 class newCar(View):
     def get(self, request):
         form = carForm()
-        context = {'form': form}
-        return render(request=request, template_name='cars/car-register.html', context=context)
+        context = {
+            'form': form,
+            }
+
+        return render(
+            request=request,
+            template_name='cars/car-register.html',
+            context=context
+            )
 
     def post(self, request):
         form = carForm(request.POST)
@@ -198,4 +190,9 @@ class newCar(View):
             'car_owner': car_owner,
             'plate_num': plate_num,
         }
-        return render(request=request, template_name='cars/car-register.html', context=context)
+
+        return render(
+            request=request,
+            template_name='cars/car-register.html',
+            context=context
+            )

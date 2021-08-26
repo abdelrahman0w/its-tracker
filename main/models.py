@@ -19,7 +19,6 @@ VIO_TYPE = (
 
 
 class Car(models.Model):
-
     class Meta:
         verbose_name = "Car"
         verbose_name_plural = "Cars"
@@ -27,7 +26,6 @@ class Car(models.Model):
     car_id = models.CharField(verbose_name='Car ID', max_length=10000, primary_key=True, unique=True)
     car_type = models.CharField(verbose_name='Car Type', max_length=255, choices=CAR_TYPE)
     num_passengers = models.IntegerField(verbose_name='Number of Passengers', default=4)
-    # violations = models.ManyToManyField(to='Violation', null=True, blank=True)
     car_owner = models.CharField(verbose_name='Car Owner', max_length=255)
     plate_num = models.CharField(verbose_name='Plate Number', max_length=255)
 
@@ -36,16 +34,12 @@ class Car(models.Model):
 
 
 class Violation(models.Model):
-
     class Meta:
         verbose_name = "Violation"
         verbose_name_plural = "Violations"
 
-    # time_stamp = models.DateTimeField(auto_now=True)
     time_stamp = models.DateTimeField(default=datetime.now, blank=True)
     car = models.ForeignKey(to='Car', on_delete=models.CASCADE)
-    # car_id = models.CharField(max_length=255)
-    # street = models.CharField(max_length=255, null=True, blank=True)
     longitude = models.CharField(max_length=255)
     latitude = models.CharField(max_length=255)
     violation_type = models.CharField(max_length=255, choices=VIO_TYPE)
@@ -56,7 +50,6 @@ class Violation(models.Model):
 
 
 class Traffic(models.Model):
-
     class Meta:
         verbose_name = "Traffic System"
         verbose_name_plural = "Traffic Systems"
